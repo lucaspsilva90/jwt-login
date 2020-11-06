@@ -1,10 +1,12 @@
 var express = require('express');
 var router = express.Router();
-var UserController = require('../controllers/UserController');
+var userController = require('../controllers/UserController');
+var authController = require('../controllers/AuthController');
 
-router.get('/', UserController.list);
+router.get('/', userController.list);
 
-router.post('/', UserController.storage);
+router.post('/', userController.storage);
+router.post('/signin', authController.login), 
 
 
 module.exports = router;

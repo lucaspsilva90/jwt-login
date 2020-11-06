@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const Telefone = require('./Telefone.js');
 const Schema = mongoose.Schema;
+
 if (mongoose.connection.readyState === 0)
     mongoose.connect(require('../db/connection-config.js'))
         .catch(err => {
@@ -10,22 +10,26 @@ if (mongoose.connection.readyState === 0)
 let UserSchema = new Schema({
     nome: {
         type: String,
-        required: [true, {message: "O usuário precisa de um nome."}],
-        min: [3, {message:"O nome deve conter ao menos 3 letras."}]
+        required: [true, "Por favor, digite um nome válido."],
+        min: [3, "Precisa ter um nome maior que 3 letras"]
     },
     email: {
         type: String,
-        required: [true, {message: "Por favor, insira um e-mail."}]
+        required: [true, "Por favor, insira um e-mail."]
     },
     senha: {
-        type: String,
-        required: [true, {message: "Por favor, insira uma senha."}]
+        type: String,   
+        required: [true, "Por favor, insira uma senha."],
+        select: false
     },
-    telefones: {
-        type: [String]
-    },
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now }
+    telefones: [{
+        ddd: {type: String},
+        numero: { type: String}
+    }],
+    data_criacao: { type: Date, default: Date.now },
+    data_atualizacao: { type: Date, default: Date.now },
+    ultimo_login: { type : Date, default: Date.now },
+    token: { type : String, default: undefined }
 });
 
 UserSchema.pre('save', function (next) {

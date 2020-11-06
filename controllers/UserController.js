@@ -1,16 +1,31 @@
 const User = require('../model/User');
-const Telefone = require('../model/Telefone');
+const bcrypt = require('bcrypt');
+
+const saltosDoHash = 12;
 
 module.exports = {
 
     storage: async (req,res) => {
-        let user = new User(req.body);
+        //utilizando desustructuring para adquirir os dados vindos via requisição
+        let { nome, email, senha, telefones } = req.body
 
-        try {
-            await user.save();
-            res.status(201).send({message:"Criado"})
-        } catch (error) {
-            res.send({message:error})
+        //realizando o hash da senha com bcrypt
+        senha = bcrypt.hashSync(senha, saltosDoHash);
+        //construindo usuario a partir dos dados obtidos da requisição
+        let user = new User({nome,email,senha, telefones});
+
+        //verificando a existência de cadastro de email
+        let emailExistente = await User.findOne({ email });
+
+        if(!emailExistente){
+            try {
+                await user.save();
+                res.status(201).send({mensagem:"Criado"})
+            } catch (error) {
+                res.send({message:error})
+            }
+        }else{
+            res.status(400).send({mensagem:"E-mail já existente."})
         }
     },
 
