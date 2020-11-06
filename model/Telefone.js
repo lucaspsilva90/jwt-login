@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 if (mongoose.connection.readyState === 0)
-    mongoose.connect(require('../connection-config.js'))
+    mongoose.connect(require('../db/connection-config.js'))
         .catch(err => {
             console.error('mongoose Error', err)
         });

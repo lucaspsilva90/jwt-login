@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Telefone = require('./Telefone.js');
 const Schema = mongoose.Schema;
 if (mongoose.connection.readyState === 0)
-    mongoose.connect(require('../connection-config.js'))
+    mongoose.connect(require('../db/connection-config.js'))
         .catch(err => {
             console.error('mongoose Error', err)
         });
@@ -22,7 +22,7 @@ let UserSchema = new Schema({
         required: [true, {message: "Por favor, insira uma senha."}]
     },
     telefones: {
-        type: [Telefone]
+        type: [String]
     },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }
