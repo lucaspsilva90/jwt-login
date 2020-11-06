@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 module.exports = {
 
     login: async (req,res) => {
+        
         let { email, senha } = req.body;
 
         try {
@@ -18,11 +19,15 @@ module.exports = {
             }
             //definindo o último login do usuario
             user.ultimo_login = Date();
-            
+            await user.save();
+            const token = user.token
+
+            res.set("Authorization", token)
+            //retornando o usuario atualizado
             user = await User.findOne({ email });
-            return res.json(user);
+            return res.status(200).json(user);
         } catch (error) {
-            return res.status(500).send({message:error})
+            return res.status(500).send({message:"Erro desconhecido"})
         }
         
     }

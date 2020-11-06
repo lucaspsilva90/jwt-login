@@ -1,11 +1,21 @@
 const User = require('../model/User');
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-const saltosDoHash = 12;
+const saltosDoHash = process.env.SALTOS_HASH;
 
 module.exports = {
 
     storage: async (req,res) => {
+
+        function criaTokenJWT(user){
+            const payload = {
+                id: user._id
+            };
+            const token = jwt.sign(payload, process.env.CHAVE_JWT);
+            return token
+        }
+
         //utilizando desustructuring para adquirir os dados vindos via requisição
         let { nome, email, senha, telefones } = req.body
 
@@ -20,9 +30,18 @@ module.exports = {
         if(!emailExistente){
             try {
                 await user.save();
-                res.status(201).send({mensagem:"Criado"})
+                //com o usuario criado definimos o token jwt
+                try {
+                    const user = await User.findOne({ email })
+                    token = criaTokenJWT(user)
+                    user.token = token;
+                    res.status(201).send(user);
+                    user.save();
+                } catch (error) {
+                    res.status(500).send(error);
+                }
             } catch (error) {
-                res.send({message:error})
+                res.send(error)
             }
         }else{
             res.status(400).send({mensagem:"E-mail já existente."})
