@@ -16,6 +16,14 @@ module.exports = {
         
         let { email, senha } = req.body;
 
+        if(!email){
+            return res.send({message:"Por favor envie um email valido."});
+        }
+
+        if(!senha){
+            return res.send({message:"Por favor envie uma senha valida."});
+        }
+
         try {
             //consulta incluindo a senha
             let user = await User.findOne({ email }).select("+senha");

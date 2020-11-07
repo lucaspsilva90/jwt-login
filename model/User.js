@@ -1,3 +1,4 @@
+const { min } = require('moment');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -23,8 +24,16 @@ let UserSchema = new Schema({
         select: false
     },
     telefones: [{
-        ddd: {type: String},
-        numero: { type: String}
+        ddd: {
+            type: String,
+            required: [true, "Por favor digite um DDD"],
+            min: [2, "Um DDD deve ter no mínimo 2 dígitos"],
+            max: [3, "Um DDD não deve ter mais que 3 dígitos"]
+        },
+        numero: { 
+            type: String,
+            required: [true, "Por favor, digite o numero de telefone."]
+        }
     }],
     data_criacao: { type: Date, default: Date.now },
     data_atualizacao: { type: Date, default: Date.now },

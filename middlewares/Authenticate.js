@@ -16,7 +16,7 @@ module.exports = async (req, res, next)  => {
 
     const token = req.headers['authorization'];
 
-    if (!token) return res.status(401).json({ message: 'No token provided.' });
+    if (!token) return res.status(401).json({ message: 'Por favor, envie o token no header da requisição' });
     if(user.token != token) return res.status(401).json({message: "Não autorizado"});
 
     const tempoUltimoLogin = calculaDiferencaUltimoLogin(user);
