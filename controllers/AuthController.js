@@ -1,9 +1,18 @@
 const User = require('../model/User');
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 module.exports = {
 
     login: async (req,res) => {
+
+        function criaTokenJWT(user){
+            const payload = {
+                id: user._id
+            };
+            const token = jwt.sign(payload, process.env.CHAVE_JWT, { expiresIn: 60 * 30 });
+            return token
+        }
         
         let { email, senha } = req.body;
 
@@ -19,13 +28,17 @@ module.exports = {
             }
             //definindo o último login do usuario
             user.ultimo_login = Date();
-            await user.save();
-            const token = user.token
 
-            res.set("Authorization", token)
+            //criando uma nova token
+            let token = criaTokenJWT(user)    
+            user.token = token
+            //setando o cabecalho com o valor da token
+            res.set("authorization", token)
+            await user.save();
             //retornando o usuario atualizado
-            user = await User.findOne({ email });
-            return res.status(200).json(user);
+            const userFinal = await User.findOne({ email })
+            return res.status(200).json(userFinal);
+
         } catch (error) {
             return res.status(500).send({message:"Erro desconhecido"})
         }

@@ -2,7 +2,7 @@ const User = require('../model/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-const saltosDoHash = process.env.SALTOS_HASH;
+const saltHash = Number(process.env.SALT_HASH);
 
 module.exports = {
 
@@ -12,7 +12,7 @@ module.exports = {
             const payload = {
                 id: user._id
             };
-            const token = jwt.sign(payload, process.env.CHAVE_JWT);
+            const token = jwt.sign(payload, process.env.CHAVE_JWT, { expiresIn: 60 * 30 });
             return token
         }
 
@@ -20,7 +20,7 @@ module.exports = {
         let { nome, email, senha, telefones } = req.body
 
         //realizando o hash da senha com bcrypt
-        senha = bcrypt.hashSync(senha, saltosDoHash);
+        senha = bcrypt.hashSync(senha, saltHash);
         //construindo usuario a partir dos dados obtidos da requisição
         let user = new User({nome,email,senha, telefones});
 
