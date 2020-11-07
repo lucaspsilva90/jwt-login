@@ -12,6 +12,10 @@ module.exports = async (req, res, next)  => {
     }
 
     const { _id } = req.params
+    if(!_id){
+        res.status(401).send({message:"Por favor, forneça o id do usuário."});
+    }
+    
     const user = await User.findOne({ _id })
 
     const token = req.headers['authorization'];
