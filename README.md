@@ -6,7 +6,26 @@
 
 * NodeJs
 * Express
-* Mongodb
+* Mongodb as service (Atlas)
+
+
+### Rodando localmente
+
+1. Clone o repositorio com o comando abaixo:
+
+> git clone https://github.com/lucaspsilva90/sky-teste
+
+2. Mude para o diretório clonado.
+
+> cd sky-teste
+
+3. Instale as dependências do projeto com o comando abaixo:
+
+> npm install
+
+4. Rode a aplicação com o comando abaixo:
+
+> npm start
 
 ### Disponível em:
 
